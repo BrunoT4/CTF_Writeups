@@ -40,7 +40,7 @@ The attack surface isn't the expense fields. It's the **username field at signup
 
 There's a uniqueness check on signup that blocks exact duplicate usernames. I tested whether it'd block SQL metacharacters too — it didn't. You can register with `'`, `' OR '1'='1`, full injection strings, whatever.
 
-Registered with `' OR '1'='1` as my username, generated a report, and the CSV came back with another user's expense data in it (an account I had made previously in the same session). Second-order injection confirmed.
+Registered with `' OR '1'='1` as my username, generated a report, and the CSV came back with another user's expense data in it (an account I had made previously in the same session). So there is in fact an existing second-order injection.
 
 ---
 
