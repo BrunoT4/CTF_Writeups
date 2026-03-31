@@ -30,23 +30,21 @@ My guess at the report pipeline is that the server runs a query along the lines 
 SELECT description, amount, date FROM expenses WHERE username = '<username>'
 ```
 
-If that username is coming straight from wherever it's stored at registration — no parameterization — then the injection doesn't fire at insert time, it fires later when you generate a report. That's a second-order SQLi. All of a sudden the problem title makes sense.
-
-The attack surface isn't the expense fields. It's the **username field at signup.**
+If that username is coming straight from wherever it's stored at registration (no parameterization) then the injection doesn't fire at insert time, it fires later when you generate a report. That's a second-order SQLi. All of a sudden the problem title makes sense. The attack surface isn't the expense fields. It's the **username** field at signup.
 
 ---
 
 ## Getting Past the Validator
 
-There's a uniqueness check on signup that blocks exact duplicate usernames. I tested whether it'd block SQL metacharacters too — it didn't. You can register with `'`, `' OR '1'='1`, full injection strings, whatever.
+There's a uniqueness check on signup that blocks exact duplicate usernames. I tested whether it'd block SQL metacharacters too. It didn't. You can register with `'`, `' OR '1'='1`, full injection strings, whatever.
 
-Registered with `' OR '1'='1` as my username, generated a report, and the CSV came back with another user's expense data in it (an account I had made previously in the same session). So there is in fact an existing second-order injection.
+I registered with `' OR '1'='1` as my username, generated a report, and the CSV came back with another user's expense data in it (an account I had made previously in the same session). So there is in fact an existing second-order injection.
 
 ---
 
 ## Figuring Out the Column Count
 
-To do a UNION-based attack I needed the column count. Registered these usernames one by one and generated a report each time:
+To do a UNION-based attack I needed the column count. I registered these usernames one by one and generated a report each time:
 
 ```
 ' UNION SELECT NULL--              → error
@@ -55,25 +53,25 @@ To do a UNION-based attack I needed the column count. Registered these usernames
 ' UNION SELECT NULL,NULL,NULL,NULL-- → error
 ```
 
-Three columns. Makes sense — description, amount, date.
+The table has three columns: description, amount, date. Makes sense considering the expense adder has these three fields.
 
-I also tried stacking queries with a semicolon. Got back:
+I also tried stacking queries with a semicolon, and got back:
 
 > *"Report generation failed: You can only execute one statement at a time."*
 
-So stacked queries are out. Single-statement UNION reads only — still more than enough.
+So stacked queries are out. Single-statement UNION reads only, still more than enough.
 
 ---
 
 ## Dumping the Schema
 
-SQLite doesn't have `information_schema` but it has `sqlite_master` which gives you the full schema. Registered with:
+SQLite doesn't have `information_schema` but it has `sqlite_master` which gives you the full schema. This time I registered with:
 
 ```sql
 ' UNION SELECT name, sql, NULL FROM sqlite_master--
 ```
 
-Generated the report and got back the entire database structure:
+When I generated the report, I got back the entire database structure:
 
 | Table | Notable columns |
 |---|---|
@@ -85,21 +83,21 @@ Generated the report and got back the entire database structure:
 
 A couple things jumped out immediately.
 
-The `reports` table stores `username TEXT` instead of a `user_id` foreign key. That's the root cause — the report query is string-matching on username rather than joining through the users primary key. That's what makes the injection possible in the first place.
+The `reports` table stores `username TEXT` instead of a `user_id` foreign key. That's the root cause: the report query is string-matching on username rather than joining through the users primary key. That's what makes the injection possible in the first place.
 
-The other thing was that obfuscated table name — `aDNyM19uMF9mMTRn`. That's clearly programmatically generated, which usually means it's hiding something like API keys, config values, or secrets. High priority target.
+The other thing was that strange table name: `aDNyM19uMF9mMTRn`. That's clearly programmatically generated, which usually means it's hiding something like API keys, config values, or secrets.
 
 ---
 
 ## Getting the Flag
 
-Registered with:
+I registered with:
 
 ```sql
 ' UNION SELECT group_concat(name||':'||value,'|'), NULL, NULL FROM aDNyM19uMF9mMTRn--
 ```
 
-I opted to check what was in the strangely named table, since intuition told me it must contain something relevant. Upon registration I generated the report (no need to add expenses as the injection is already complete). The CSV came back with all the key-value pairs from that table dumped into the description column. To no surprise, one of the column names in that table was the flag.
+I opted to check what was in the strangely named table first, since intuition told me it must contain something relevant. Upon registration I generated the report (no need to add expenses as the injection is already complete). The CSV came back with all the key-value pairs from that table dumped into the description column. To no surprise, one of the column names in that table was the flag.
 
 ---
 
