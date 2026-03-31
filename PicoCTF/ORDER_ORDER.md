@@ -23,9 +23,9 @@ What did catch my eye was the generated CSV filename. It was named dynamically a
 
 ## Getting Past the Validator
 
-There's a uniqueness check on signup that blocks exact duplicate usernames. I tested whether it'd block SQL metacharacters too. It didn't. You can register with `'`, `' OR '1'='1`, full injection strings, whatever.
+There's a uniqueness check on signup that blocks exact duplicate usernames. From my initial recon, I knew there was no string filter for SQL metacharcters. You can register with `'`, `' OR '1'='1`, full injection strings, pretty much whatever you want. This is a comical amount of free range for constructing my injection string.
 
-I registered with `' OR '1'='1` as my username, generated a report, and the CSV came back with another user's expense data in it (an account I had made previously in the same session). So there is in fact an existing second-order injection.
+I registered with `' OR '1'='1` as my username, generated a report, and the CSV came back with my previous account's expense data in it. So there is in fact an existing second-order injection.
 
 ---
 
