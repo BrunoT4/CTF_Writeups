@@ -99,17 +99,7 @@ Registered with:
 ' UNION SELECT group_concat(name||':'||value,'|'), NULL, NULL FROM aDNyM19uMF9mMTRn--
 ```
 
-Generated the report. The CSV came back with all the key-value pairs from that table dumped into the description column. One of the column names in that table was the flag.
-
----
-
-## Full Attack Chain
-
-1. Sign up with your injection payload as the username
-2. Log in, go to the expense tracker
-3. Hit "Generate Report" — the username gets interpolated unsanitized into the SQL query at this point
-4. Download the CSV from your inbox
-5. Read the flag out of the description column
+I opted to check what was in the strangely named table, since intuition told me it must contain something relevant. Upon registration I generated the report (no need to add expenses as the injection is already complete). The CSV came back with all the key-value pairs from that table dumped into the description column. To no surprise, one of the column names in that table was the flag.
 
 ---
 
