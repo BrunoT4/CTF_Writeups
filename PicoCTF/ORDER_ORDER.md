@@ -113,4 +113,4 @@ Generated the report. The CSV came back with all the key-value pairs from that t
 
 ---
 
-**Flag:** `picoCTF{PLACEHOLDER}`
+**Flag:** `picoCTF{s3c0nd_0rd3r_1t_1s_5c47e96a}`
