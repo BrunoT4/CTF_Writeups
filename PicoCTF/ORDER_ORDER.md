@@ -14,11 +14,10 @@ Pretty simple surface area at first glance.
 
 ## Initial Recon
 
-The first thing I noticed was that expense submissions go out as a JSON payload over an API. All three fields just get inserted as strings. The insert itself is handled entirely server-side so there's no obvious injection point there.
+The first thing I saw upon navigating to the site was a login/signup page. Naturally I tried the usual: ' OR '1'='1, admin'--, all of the classics. Nothing. Either it's parameterized or there's some sanitization happening up front, but either way the login form wasn't biting.
+So I made an account and started poking around the actual app. I observed that expense submissions go out as a JSON payload over an API, all three fields get inserted as strings, and inserts are handled entirely server-side. No obvious injection surface there either.
 
-What *did* catch my eye was the generated CSV filename. It was named dynamically after the logged-in user. Something like `johndoe_report.csv`. That tells you the username is flowing into backend processing somewhere, which is worth keeping in mind.
-
-The other thing I noticed was the app throws verbose errors when report generation fails. Not a vulnerability on its own but it will be useful later.
+What did catch my eye was the generated CSV filename. It was named dynamically after the logged-in user, in my case something like report_wasd_{random # string}.csv (not a very creative name, but it got the job done). That told me the username was flowing into backend processing somewhere downstream, and that's a different story from the insert. If the report query is pulling expenses by matching on the username string rather than a user ID, and that username isn't sanitized at query time, then that's a second-order injection waiting to happen. So the attack surface isn't the app, but the account name you use to access it. Suddenly the problem title makes a whole lot more sense.
 
 ---
 
@@ -97,7 +96,7 @@ I registered with:
 ' UNION SELECT group_concat(name||':'||value,'|'), NULL, NULL FROM aDNyM19uMF9mMTRn--
 ```
 
-I opted to check what was in the strangely named table first, since intuition told me it must contain something relevant. Upon registration I generated the report (no need to add expenses as the injection is already complete). The CSV came back with all the key-value pairs from that table dumped into the description column. To no surprise, one of the column names in that table was the flag.
+I decided to check what was in the strangely named table first, since intuition told me it must contain something relevant. Upon registration I generated the report (no need to add expenses as the injection is already complete). The CSV came back with all the key-value pairs from that table dumped into the description column. To no surprise, one of the column names in that table was the flag.
 
 ---
 
