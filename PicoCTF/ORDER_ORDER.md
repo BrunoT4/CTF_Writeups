@@ -72,7 +72,7 @@ A couple things jumped out immediately.
 
 The `reports` table stores `username TEXT` instead of a `user_id` foreign key. That's the root cause: the report query is string-matching on username rather than joining through the users primary key. That's what makes the injection possible in the first place.
 
-The other thing was that strange table name: `aDNyM19uMF9mMTRn`. That's clearly programmatically generated, which means it's probably hiding some sort of secret/secret values.
+The other thing was that strange table name: `aDNyM19uMF9mMTRn`. That's clearly programmatically generated, which means it's probably hiding some sort of secret/secret values. Obviously this table seemed a little off, so I wanted to prioritize investigating it.
 
 ---
 
@@ -84,7 +84,7 @@ I registered with:
 ' UNION SELECT group_concat(name||':'||value,'|'), NULL, NULL FROM aDNyM19uMF9mMTRn--
 ```
 
-I decided to check what was in the strangely named table first, since intuition told me it must contain something relevant. Upon registration I generated the report (no need to add expenses as the injection is already complete). The CSV came back with all the key-value pairs from that table dumped into the description column. To no surprise, one of the column names in that table was the flag.
+Upon registration I generated the report (no need to add expenses as the injection is already complete). The CSV came back with all the key-value pairs from that table dumped into the description column. To no surprise, one of the column names in that table was the flag.
 
 ---
 
