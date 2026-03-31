@@ -14,11 +14,11 @@ Pretty simple surface area at first glance.
 
 ## Initial Recon
 
-First thing I noticed — expense submissions go out as a JSON payload over an API. All three fields just get inserted as strings. The insert itself is handled entirely server-side so there's no obvious injection point there.
+The first thing I noticed was that expense submissions go out as a JSON payload over an API. All three fields just get inserted as strings. The insert itself is handled entirely server-side so there's no obvious injection point there.
 
-What *did* catch my eye was the generated CSV filename. It was named dynamically after the logged-in user — something like `john_report.csv`. That tells you the username is flowing into backend processing somewhere, which is worth keeping in mind.
+What *did* catch my eye was the generated CSV filename. It was named dynamically after the logged-in user. Something like `johndoe_report.csv`. That tells you the username is flowing into backend processing somewhere, which is worth keeping in mind.
 
-The other thing I noticed was the app throws verbose errors when report generation fails. Not a vulnerability on its own but useful later.
+The other thing I noticed was the app throws verbose errors when report generation fails. Not a vulnerability on its own but it will be useful later.
 
 ---
 
@@ -30,7 +30,7 @@ My guess at the report pipeline is that the server runs a query along the lines 
 SELECT description, amount, date FROM expenses WHERE username = '<username>'
 ```
 
-If that username is coming straight from wherever it's stored at registration (no parameterization) then the injection doesn't fire at insert time, it fires later when you generate a report. That's a second-order SQLi. All of a sudden the problem title makes sense. The attack surface isn't the expense fields. It's the **username** field at signup.
+If that username is coming straight from wherever it's stored at registration (no parameterization) then the injection doesn't fire at insert time, it fires later when you generate a report. That's a second-order SQLi. All of a sudden the problem title makes sense. The attack surface isn't the expense fields, it's the **username** field at signup.
 
 ---
 
