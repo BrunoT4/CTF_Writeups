@@ -24,7 +24,7 @@ The other thing I noticed was the app throws verbose errors when report generati
 
 ## The Hypothesis
 
-My guess at the report pipeline, is that the server runs a query along the lines of:
+My guess at the report pipeline is that the server runs a query along the lines of:
 
 ```sql
 SELECT description, amount, date FROM expenses WHERE username = '<username>'
