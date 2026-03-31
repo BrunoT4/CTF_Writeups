@@ -23,7 +23,7 @@ What did catch my eye was the generated CSV filename. It was named dynamically a
 
 ## Getting Past the Validator
 
-There's a uniqueness check on signup that blocks exact duplicate usernames. From my initial recon, I knew there was no string filter for SQL metacharcters. You can register with `'`, `' OR '1'='1`, full injection strings, pretty much whatever you want. This is a comical amount of free reign for constructing my injection string.
+There's a uniqueness check on signup that blocks exact duplicate usernames. From my initial recon, I knew there was no string filter for SQL metacharacters. You can register with `'`, `' OR '1'='1`, full injection strings, pretty much whatever you want. This is a comical amount of free reign for constructing my injection string.
 
 I registered with `' OR '1'='1` as my username, generated a report, and the CSV came back with my previous account's expense data in it. So there is in fact an existing second-order injection.
 
@@ -46,7 +46,7 @@ I also tried stacking queries with a semicolon, and got back:
 
 > *"Report generation failed: You can only execute one statement at a time."*
 
-It seems this table exclusively contains expense data, so the next place to check is wether this database contains any other tables.
+It seems this table exclusively contains expense data, so the next place to check is whether this database contains any other tables.
 
 ---
 
@@ -70,7 +70,7 @@ When I generated the report, I got back the entire database structure:
 
 A couple things jumped out immediately.
 
-The `reports` table stores `username TEXT` instead of a `user_id` foreign key. That's the root cause: the report query is string-matching on username rather than joining through the users primary key. That's what makes the injection possible in the first place.
+The `reports` table stores `username TEXT` instead of a `user_id` foreign key. That's the root cause: the report query is string-matching on username rather than joining through the user's primary key. That's what makes the injection possible in the first place.
 
 The other thing was that strange table name: `aDNyM19uMF9mMTRn`. That's clearly programmatically generated, which means it's probably hiding some sort of secret. Obviously this table seemed a little off, so I wanted to prioritize investigating it.
 
@@ -84,7 +84,7 @@ I registered with:
 ' UNION SELECT group_concat(name||':'||value,'|'), NULL, NULL FROM aDNyM19uMF9mMTRn--
 ```
 
-Upon registration I generated the report (no need to add expenses as the injection is already complete). The CSV came back with all the key-value pairs from that table dumped into the description column. Sure enough, one of the column names in that table was the flag.
+Upon registration I generated the report (no need to add expenses as the injection is already complete). The CSV came back with all the key-value pairs from that table dumped into the description column. Sure enough, one of the cells in that table contained the flag.
 
 ---
 
