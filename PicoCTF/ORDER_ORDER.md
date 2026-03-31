@@ -17,7 +17,7 @@ Pretty simple surface area at first glance.
 The first thing I saw upon navigating to the site was a login/signup page. Naturally I tried the usual: ' OR '1'='1, admin'--, all of the classics. Nothing. Either it's parameterized or there's some sanitization happening up front, but either way the login form wasn't biting.
 So I made an account and started poking around the actual app. I observed that expense submissions go out as a JSON payload over an API, all three fields get inserted as strings, and inserts are handled entirely server-side. No obvious injection surface there either.
 
-What did catch my eye was the generated CSV filename. It was named dynamically after the logged-in user, in my case something like report_wasd_{random # string}.csv (not a very creative name, but it got the job done). That told me the username was flowing into backend processing somewhere downstream, and that's a different story from the insert. If the report query is pulling expenses by matching on the username string rather than a user ID, and that username isn't sanitized at query time, then the username you use to register the account may very well be the attack surface.
+What did catch my eye was the generated CSV filename. It was named dynamically after the logged-in user, in my case something like report_wasd_{random # string}.csv (not a very creative name, but it got the job done). That told me the username was flowing into backend processing somewhere downstream, and that's a different story from the insert. If the report query is pulling expenses by matching on the username string rather than a user ID, and that username isn't sanitized at query time, then the username I was using to register the account could very well be an attack surface.
 
 ---
 
