@@ -72,7 +72,7 @@ A couple things jumped out immediately.
 
 The `reports` table stores `username TEXT` instead of a `user_id` foreign key. That's the root cause: the report query is string-matching on username rather than joining through the users primary key. That's what makes the injection possible in the first place.
 
-The other thing was that strange table name: `aDNyM19uMF9mMTRn`. That's clearly programmatically generated, which means it's probably hiding some sort of secret/secret values. Obviously this table seemed a little off, so I wanted to prioritize investigating it.
+The other thing was that strange table name: `aDNyM19uMF9mMTRn`. That's clearly programmatically generated, which means it's probably hiding some sort of secret. Obviously this table seemed a little off, so I wanted to prioritize investigating it.
 
 ---
 
