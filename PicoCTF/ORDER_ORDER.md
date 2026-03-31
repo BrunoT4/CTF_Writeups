@@ -23,7 +23,7 @@ What did catch my eye was the generated CSV filename. It was named dynamically a
 
 ## Getting Past the Validator
 
-There's a uniqueness check on signup that blocks exact duplicate usernames. From my initial recon, I knew there was no string filter for SQL metacharcters. You can register with `'`, `' OR '1'='1`, full injection strings, pretty much whatever you want. This is a comical amount of free range for constructing my injection string.
+There's a uniqueness check on signup that blocks exact duplicate usernames. From my initial recon, I knew there was no string filter for SQL metacharcters. You can register with `'`, `' OR '1'='1`, full injection strings, pretty much whatever you want. This is a comical amount of free reign for constructing my injection string.
 
 I registered with `' OR '1'='1` as my username, generated a report, and the CSV came back with my previous account's expense data in it. So there is in fact an existing second-order injection.
 
@@ -46,7 +46,7 @@ I also tried stacking queries with a semicolon, and got back:
 
 > *"Report generation failed: You can only execute one statement at a time."*
 
-So stacked queries are out. Single-statement UNION reads only, still more than enough.
+It seems this table exclusively contains expense data, so the next place to check is wether this database contains any other tables.
 
 ---
 
@@ -84,7 +84,7 @@ I registered with:
 ' UNION SELECT group_concat(name||':'||value,'|'), NULL, NULL FROM aDNyM19uMF9mMTRn--
 ```
 
-Upon registration I generated the report (no need to add expenses as the injection is already complete). The CSV came back with all the key-value pairs from that table dumped into the description column. To no surprise, one of the column names in that table was the flag.
+Upon registration I generated the report (no need to add expenses as the injection is already complete). The CSV came back with all the key-value pairs from that table dumped into the description column. Sure enough, one of the column names in that table was the flag.
 
 ---
 
