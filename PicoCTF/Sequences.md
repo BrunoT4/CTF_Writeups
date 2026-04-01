@@ -1,4 +1,4 @@
-# picoCTF 2022 — Sequences
+# picoCTF 2022 — Sequences (unfinished)
 
 **Category:** Cryptography, **Difficulty:** Hard
 
