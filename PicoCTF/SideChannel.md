@@ -182,7 +182,7 @@ else:
     print("[!] final candidate was not accepted")
 ```
 
-Running the new and improved script I got the working PIN: 
+Running the new and improved script I got the working PIN: 48390513
 
 ---
 
