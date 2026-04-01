@@ -64,21 +64,21 @@ This challenge requires you to optimize the recursive function m_func() so that 
 
 The recursive function defines the sequence
 
-\[
+$$
 a_0 = 1,\quad a_1 = 2,\quad a_2 = 3,\quad a_3 = 4
-\]
+$$
 
-and for \(n \ge 4\),
+and for $n \ge 4$,
 
-\[
+$$
 a_n = 55692a_{n-4} - 9549a_{n-3} + 301a_{n-2} + 21a_{n-1}.
-\]
+$$
 
 I rewrote it in a more standard order as
 
-\[
+$$
 a_n = 21a_{n-1} + 301a_{n-2} - 9549a_{n-3} + 55692a_{n-4}.
-\]
+$$
 
 This makes it clear that it is just a linear recurrence of order 4.
 
@@ -92,17 +92,17 @@ The biggest thing that simplifies the challenge is in `decrypt_flag`:
 sol = sol % (10**10000)
 ```
 
-That means I do **not** need the full value of \(a_n\). I only need
+That means I do **not** need the full value of $a_n$. I only need
 
-\[
+$$
 a_n \bmod 10^{10000}.
-\]
+$$
 
 That is huge because it means I can do the entire recurrence modulo
 
-\[
+$$
 M = 10^{10000}
-\]
+$$
 
 from the start.
 
@@ -110,9 +110,9 @@ Since linear recurrences behave nicely under modular arithmetic, this loses no i
 
 So the actual goal becomes:
 
-\[
+$$
 a_{20000000} \bmod 10^{10000}.
-\]
+$$
 
 ---
 
@@ -120,7 +120,7 @@ a_{20000000} \bmod 10^{10000}.
 
 I define the state vector
 
-\[
+$$
 \mathbf{x}_n =
 \begin{bmatrix}
 a_n \\
@@ -128,17 +128,17 @@ a_{n-1} \\
 a_{n-2} \\
 a_{n-3}
 \end{bmatrix}.
-\]
+$$
 
 Then the recurrence can be written as
 
-\[
+$$
 \mathbf{x}_n = A\mathbf{x}_{n-1}
-\]
+$$
 
 where
 
-\[
+$$
 A =
 \begin{bmatrix}
 21 & 301 & -9549 & 55692 \\
@@ -146,17 +146,17 @@ A =
 0 & 1 & 0 & 0 \\
 0 & 0 & 1 & 0
 \end{bmatrix}.
-\]
+$$
 
 So instead of recursively computing one term at a time, I can compute
 
-\[
+$$
 \mathbf{x}_n = A^{n-3}\mathbf{x}_3
-\]
+$$
 
 with
 
-\[
+$$
 \mathbf{x}_3 =
 \begin{bmatrix}
 4 \\
@@ -164,17 +164,17 @@ with
 2 \\
 1
 \end{bmatrix}.
-\]
+$$
 
 The answer I want is the first entry of that vector.
 
-This is much better because I can compute \(A^{n-3}\) using fast exponentiation, which only takes \(O(\log n)\) multiplications.
+This is much better because I can compute $A^{n-3}$ using fast exponentiation, which only takes $O(\log n)$ multiplications.
 
 ---
 
 ## Step 4: Adding the Optimization to the Program
 
-The optimized solution is to compute the matrix power modulo \(10^{10000}\) and then feed the result into the original decryption logic.
+The optimized solution is to compute the matrix power modulo $10^{10000}$ and then feed the result into the original decryption logic.
 
 This is the modification I made:
 
