@@ -25,4 +25,18 @@ My first course of action was to connect to the server and just see what was on 
 
 ## The Side Channel
 
-Since the program is expecting a PIN (Personal Identification Number), it's a safe assumption that it is only expecting printable digits (0-9). The hint also suggests the user reads about timing-based side channels. A side channel involves observing information of a physical implementation of a system to understand its functionality. This could be anything such as how much power a machine uses to make a computation, or the frequency of an electro-magnetic wave released by a device, or in this case, how much time it takes to check our PIN.
+Since the program is expecting a PIN (Personal Identification Number), it's a safe assumption that it is only expecting printable digits (0-9). The hint also suggests the user reads about timing-based side channels. A side channel involves observing information of a physical implementation of a system to understand its functionality. This could be anything such as how much power a machine uses to make a computation, or the frequency of an electro-magnetic wave released by a device, or in this case, how much time it takes to check our PIN. Usually the latency that occurs over a network can introduce a lot of noise which may mess up a timing based analysis, but luckily for us we have a local version of pin_checker, and thus we can run this side channel directly on our machine. Before doing any sort of automation or brute force, I wanted to test a handful of manual entries to see what observations I could make. I started by testing out each digit a handful of times (0, 1,... ,9) using the 'time' cla, but nothing notable (sample: time echo '0' | ./pin_checker). Every time the programs run time came out to ~0.2 seconds. This is not a bad sign, it just means there is probably some other check happening first that quits out after 0.2 seconds. Recalling from my initial observations, I remembered the expected PIN length was 8, so I ran the same experiment but with additional padding at the end of each digit. Immediately the run time bumped up to about ~0.4 second, which is a good sign that increasing the length did something, and upon testing with pin '40000000', the pin_checker program had a noticeably longer runtime of an additional ~0.2 seconds. I tested each about two more times to confirm this observation, and to my content it seemed this longer runtime was consistent. 
+
+Through this simple analysis I was able to compile some key findings:
+
+* The program expects an 8 digit pin, and does an initial check on the PIN length before doing any other sort of check/comparison
+* Certain digits cause the program to run longer, and because of my inputs we can assume this is befcause the program is doing a check that is left associative
+* If we keep building off the 'correct' last digit (whichever caused the program to run longest), then we can append and repeat until we've constructed the whole pin
+
+This is all great and certainly narrows down our algorithm, but it would still be too much busy work to manually test every entry, so my next step would be to automate this process.
+
+---
+
+## Scripting
+
+
