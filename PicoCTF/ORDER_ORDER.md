@@ -12,7 +12,7 @@ Pretty simple surface area at first glance.
 
 ---
 
-## Initial Recon
+## Initial Observations
 
 The first thing I saw upon navigating to the site was a login/signup page. Naturally I tried the usual: ' OR '1'='1, admin';. Nothing. Either it's parameterized or there's some sanitization happening up front, but either way the login form wasn't biting.
 So I made an account and started poking around the actual app. I observed that expense submissions go out as a JSON payload over an API, all three fields get inserted as strings, and inserts are handled entirely server-side. No obvious injection surface there either.
