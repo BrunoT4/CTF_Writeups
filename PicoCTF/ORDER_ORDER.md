@@ -1,6 +1,6 @@
 # picoCTF 2026 — ORDER ORDER
 
-**Category:** Web Exploitation
+**Category:** Web Exploitation, **Difficulty:** Hard
 
 ---
 
