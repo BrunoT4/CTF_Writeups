@@ -18,4 +18,4 @@ The challenge involes optimizing a recursive function so that it does not overfl
 
 ## My Solution
 
-I represented the recursive function as a matrix and ran a row reduction. My solution is on paper so hopefully my hand-writing is legible. If not, I do not go to school to study handwriting, so bare with me.
+I represented the recursive function as a matrix and used reductions to transform it into a non-recursive equation. My solution is on paper so hopefully my hand-writing is legible. If not, I do not go to school to study handwriting, so bare with me.
