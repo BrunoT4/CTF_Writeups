@@ -1,5 +1,5 @@
 
-# picoCTF 2026 — SideChannel
+# picoCTF 2022 — SideChannel
 
 **Category:** Digital Forensics, **Difficulty:** Hard
 
