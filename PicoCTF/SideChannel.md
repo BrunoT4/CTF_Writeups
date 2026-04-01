@@ -32,7 +32,7 @@ Before doing any sort of automation or brute force, I wanted to test a handful o
 Through this simple analysis I was able to compile some key findings:
 
 * The program expects an 8 digit pin, and does an initial check on the PIN length before doing any other sort of check/comparison
-* Certain digits cause the program to run longer, and because of my inputs we can assume this is befcause the program is doing a check that is left associative
+* Certain digits cause the program to run longer, and because of my inputs we can assume this is because the program is doing a check that is left associative
 * If we keep building off the 'correct' last digit (whichever caused the program to run longest), then we can append and repeat until we've constructed the whole pin
 
 This is all great and certainly narrows down our algorithm, but it would still be too much busy work to manually test every entry, so my next step would be to automate this process.
@@ -41,4 +41,153 @@ This is all great and certainly narrows down our algorithm, but it would still b
 
 ## Scripting
 
+The initial script was simple, just check every digit in position 0, then position 1, and so on and so forth:
 
+```python
+import subprocess
+import time
+
+BINARY = "./pin_checker"
+DIGITS = "0123456789"
+PIN_LEN = 8
+
+def run_guess(guess):
+    start = time.perf_counter()
+    p = subprocess.run(
+        [BINARY],
+        input=guess + "\n",
+        capture_output=True,
+        text=True
+    )
+    end = time.perf_counter()
+    out = (p.stdout or "") + (p.stderr or "")
+    return end - start, out
+
+def is_success(out):
+    return "Access granted." in out
+
+def is_wrong_length(out):
+    return "Incorrect length." in out
+
+known = ""
+
+for i in range(PIN_LEN):
+    best_digit = None
+    best_time = -1.0
+
+    for d in DIGITS:
+        guess = known + d + "0" * (PIN_LEN - len(known) - 1)
+        t, out = run_guess(guess)
+
+        print(f"pos={i} guess={guess} time={t:.3f}s")
+
+        if is_success(out):
+            print(f"[+] recovered pin: {guess}")
+            raise SystemExit
+
+        if is_wrong_length(out):
+            print(f"[!] wrong length for guess {guess!r}")
+            raise SystemExit(1)
+
+        if t > best_time:
+            best_time = t
+            best_digit = d
+
+    known += best_digit
+    print(f"[+] chose {best_digit}, current prefix = {known}, time = {best_time:.3f}s")
+
+final_time, final_out = run_guess(known)
+print(f"[+] final candidate: {known}")
+print(final_out)
+
+if is_success(final_out):
+    print(f"[+] recovered pin: {known}")
+else:
+    print("[!] final candidate was not accepted")
+```
+
+Running this multiple times I kept getting different PINs, which is not ideal. Remember there is only one correct PIN, so the expected behaviour is that I should be getting a consistent output, which is the expected PIN. A key observation here is that across different executions of this program, the same pins have varying run times. A process does not exist in a vacuum, meaning many environmental factors can impact runtime (Ex: your machine may be running other processes that can slightly affect latency), so it is not consistent to run a single check and move on. To work around this slight noise, I incorporated some frequency analysis, in which the script tries each PIN 5 times (or any amount of times defined by the user), and then uses the median runtime for comparison. Ideally this should cause some convergence and cause any outliers to be ignored. The new and improved script was as follows:
+
+```python
+import subprocess
+import time
+from statistics import median
+
+BINARY = "./pin_checker"
+DIGITS = "0123456789"
+PIN_LEN = 8
+TRIALS = 5
+
+def run_guess(guess):
+    start = time.perf_counter()
+    p = subprocess.run(
+        [BINARY],
+        input=guess + "\n",
+        capture_output=True,
+        text=True
+    )
+    end = time.perf_counter()
+    out = (p.stdout or "") + (p.stderr or "")
+    return end - start, out
+
+def timed_guess(guess, trials=TRIALS):
+    times = []
+    last_out = ""
+    for _ in range(trials):
+        t, out = run_guess(guess)
+        times.append(t)
+        last_out = out
+    return median(times), last_out, times
+
+def is_success(out):
+    return "Access granted." in out
+
+def is_wrong_length(out):
+    return "Incorrect length." in out
+
+known = ""
+
+for i in range(PIN_LEN):
+    best_digit = None
+    best_med = -1.0
+
+    for d in DIGITS:
+        guess = known + d + "0" * (PIN_LEN - len(known) - 1)
+        med, out, samples = timed_guess(guess)
+
+        print(f"pos={i} guess={guess} median={med:.3f}s samples={[round(x,3) for x in samples]}")
+
+        if is_success(out):
+            print(f"[+] recovered pin: {guess}")
+            raise SystemExit
+
+        if is_wrong_length(out):
+            print(f"[!] wrong length for guess {guess!r}")
+            raise SystemExit(1)
+
+        if med > best_med:
+            best_med = med
+            best_digit = d
+
+    known += best_digit
+    print(f"[+] chose {best_digit}, current prefix = {known}, median = {best_med:.3f}s")
+
+final_med, final_out, final_samples = timed_guess(known)
+print(f"[+] final candidate: {known}")
+print(final_out)
+
+if is_success(final_out):
+    print(f"[+] recovered pin: {known}")
+else:
+    print("[!] final candidate was not accepted")
+```
+
+Running the new and improved script I got the working PIN: 
+
+---
+
+## Getting the Flag
+
+All that there was left to do now was just take that PIN, connect to the remote host, and paste it in.
+
+And just like that I got my flag!
