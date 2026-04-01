@@ -56,7 +56,7 @@ if __name__ == "__main__":
     decrypt_flag(sol)
 ```
 
-The challenge involes optimizing a recursive function so that it does not overflow and take a billion years to run (yes I am being serious). The result of the function will be the decryption key used to decrypt the ciphertext and output the flag.
+This challenge requires you to optimize the recursive function m_func() so that it does not overflow and take a billion years to run (yes I am being serious). The result of the function will be the decryption key used to decrypt the ciphertext and output the flag.
 
 ---
 
