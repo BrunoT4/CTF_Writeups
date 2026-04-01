@@ -13,13 +13,13 @@ This is a problem from picoCTF 2022. It was a problem I solved back in high scho
 
 ## Challenge Overview
 
-The challenge gives you a host address and port to connect to, that upon connection asks for a PIN. Variable on wether you enter the correct PIN or not, you either get an "Access Denied" message, or presumably the flag (if you enter the correct PIN). The problem also provides the ELF file for the pin_checker program, which you can download and analyze on your local machine (The correct PIN is the same for both the provided ELF and the version running on saturn.picoctf.net)
+The challenge gives you a host address and port to connect to, that upon connection asks for a PIN. Depending on whether the entered PIN is correct, the service returns either 'Access denied' or the flag. The problem also provides the ELF file for the pin_checker program, which you can download and analyze on your local machine (The correct PIN is the same for both the provided ELF and the version running on saturn.picoctf.net)
 
 ---
 
 ## Initial Observations
 
-My first course of action was to connect to the server and just see what was on it. Immediately I got hit with the pin checker program asking me for the PIN. Since the program starts itself upon connection, and the machine boots you out after entering a PIN, it's safe to assume not much can be done here. That's okay, because the problem actually provides you with that same pin checker program, so I can just run a local analysis on the file first. I decided to reverse engineer the program on Ghidra to see what information I could get, but the main function seemed to hefty to be decompiled. This makes sense as one of the hints says: "Attempting to reverse-engineer or exploit the binary won't help you." Luckily I was able to retrieve the length of the expected PIN as 8, which will be helpful later. Since I couldn't pull any more information from reversing the binary, I'd need a different approach. 
+My first course of action was to connect to the server and just see what was on it. Immediately I got hit with the pin checker program asking me for the PIN. Since the program starts itself upon connection, and the machine boots you out after entering a PIN, it's safe to assume not much can be done here. That's okay, because the problem actually provides you with that same pin checker program, so I can just run a local analysis on the file first. I decided to reverse engineer the program on Ghidra to see what information I could get, but the main function seemed too hefty to be decompiled. This makes sense as one of the hints says: "Attempting to reverse-engineer or exploit the binary won't help you." Luckily I was able to retrieve the length of the expected PIN as 8, which will be helpful later. Since I couldn't pull any more information from reversing the binary, I'd need a different approach. 
 
 ---
 
@@ -32,7 +32,7 @@ Before doing any sort of automation or brute force, I wanted to test a handful o
 Through this simple analysis I was able to compile some key findings:
 
 * The program expects an 8 digit pin, and does an initial check on the PIN length before doing any other sort of check/comparison
-* Certain digits cause the program to run longer, and because of my inputs we can assume this is because the program is doing a check that is left associative
+* Certain digits cause the program to run longer, and because of my inputs we can assume this is because the program is doing a left-to-right prefix comparison
 * If we keep building off the 'correct' last digit (whichever caused the program to run longest), then we can append and repeat until we've constructed the whole pin
 
 This is all great and certainly narrows down our algorithm, but it would still be too much busy work to manually test every entry, so my next step would be to automate this process.
