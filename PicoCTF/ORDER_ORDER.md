@@ -4,9 +4,9 @@
 
 ---
 
-## The App
+## Challenge Overview
 
-The challenge gives you a hosted expense tracker. You can sign up, add expenses (description, amount, date), and hit a "Generate Report" button that compiles your expenses into a CSV and drops it in your inbox.
+The challenge gives you a hosted expense tracker. You can sign up, add expenses (description, amount, date), and hit a "Generate Report" button that compiles your expenses into a CSV and drops it in your inbox. This CSV can also be downloaded onto your machine.
 
 Pretty simple surface area at first glance.
 
