@@ -108,6 +108,4 @@ def sound_generation(name, rand_hex):
 
 A python  script!!! Looks like this was the script used to generate the wav using itself, and at the bottom we have our flag.
 
----
-
 **Flag:** `picoCTF{mU21C_1s_1337_5db6b85e}`
