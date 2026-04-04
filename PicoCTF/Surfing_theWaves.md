@@ -20,4 +20,6 @@ My intial assumption was that this file uses some existing form of audio stegano
 
 ## A Very Interesting Sound Wave
 
-[placeholder]
+I wanted a way to convert the wav into numerical data (an array of each frequency in the sound wave), I.e a Fourier Transform. Luckily I know a python library that can do exactly this: scipy. After doing a quick little installation using brew, I got to inspecting. I used the following inline scripting:
+
+
