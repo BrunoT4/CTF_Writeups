@@ -8,3 +8,6 @@
 
 ---
 
+## Challenge Overview
+
+Main.wav is a very short (~1 second) audio clip of what appears to be random noise. At first glance, it seems to be a very basic audio steganography problem, nothing that an existing library or web app can't solve. However the challenge quickly proves to be much more intricate, and the actual encoding is custom designed by the challenge authors.
