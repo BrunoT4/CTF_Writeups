@@ -2,6 +2,11 @@
 
 **Category:** Cryptography, **Difficulty:** Hard
 
+
+## Description
+
+`I wrote this linear recurrence function, can you figure out how to make it run fast enough and get the flag? Download the code here `[sequences.py](https://artifacts.picoctf.net/c/67/sequences.py)`. Note that even an efficient solution might take several seconds to run. If your solution is taking several minutes, then you may need to reconsider your approach.`
+
 ---
 
 ## Author Notes
@@ -9,10 +14,6 @@
 This is an interesting problem because it's really just a math optimization problem, as opposed to your traditional cryptanalysis challenge that you'd see in a ctf. Nonetheless I enjoy math and it seemed pretty straight forward, so I thought I'd make a quick write up here.
 
 ---
-
-## Description
-
-`I wrote this linear recurrence function, can you figure out how to make it run fast enough and get the flag? Download the code here `[sequences.py](https://artifacts.picoctf.net/c/67/sequences.py)`. Note that even an efficient solution might take several seconds to run. If your solution is taking several minutes, then you may need to reconsider your approach.`
 
 ## Challenge Overview
 
