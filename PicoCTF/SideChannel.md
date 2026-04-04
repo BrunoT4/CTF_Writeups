@@ -25,7 +25,6 @@ The challenge gives you a host address and port to connect to, that upon connect
 
 My first course of action was to connect to the server and just see what was on it. Immediately I got hit with the pin checker program asking me for the PIN. Since the program starts itself upon connection, and the machine boots you out after entering a PIN, it's safe to assume not much can be done here. That's okay, because the problem actually provides you with that same pin checker program, so I can just run a local analysis on the file first. I decided to reverse engineer the program on Ghidra to see what information I could get, but the main function seemed too hefty to be decompiled. This makes sense as one of the hints says: "Attempting to reverse-engineer or exploit the binary won't help you." Luckily I was able to retrieve the length of the expected PIN as 8, which will be helpful later. Since I couldn't pull any more information from reversing the binary, I'd need a different approach. 
 
----
 
 ## The Side Channel
 
@@ -41,7 +40,6 @@ Through this simple analysis I was able to compile some key findings:
 
 This is all great and certainly narrows down our algorithm, but it would still be too much busy work to manually test every entry, so my next step would be to automate this process.
 
----
 
 ## Scripting
 
