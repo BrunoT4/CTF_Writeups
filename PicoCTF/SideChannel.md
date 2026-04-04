@@ -84,11 +84,11 @@ for i in range(PIN_LEN):
         print(f"pos={i} guess={guess} time={t:.3f}s")
 
         if is_success(out):
-            print(f"[+] recovered pin: {guess}")
+            print(f"recovered pin: {guess}")
             raise SystemExit
 
         if is_wrong_length(out):
-            print(f"[!] wrong length for guess {guess!r}")
+            print(f"wrong length for guess {guess!r}")
             raise SystemExit(1)
 
         if t > best_time:
@@ -96,16 +96,16 @@ for i in range(PIN_LEN):
             best_digit = d
 
     known += best_digit
-    print(f"[+] chose {best_digit}, current prefix = {known}, time = {best_time:.3f}s")
+    print(f"chose {best_digit}, current prefix = {known}, time = {best_time:.3f}s")
 
 final_time, final_out = run_guess(known)
-print(f"[+] final candidate: {known}")
+print(f"final candidate: {known}")
 print(final_out)
 
 if is_success(final_out):
-    print(f"[+] recovered pin: {known}")
+    print(f"recovered pin: {known}")
 else:
-    print("[!] final candidate was not accepted")
+    print("final candidate was not accepted")
 ```
 
 Running this multiple times I kept getting different PINs, which is not ideal. Remember there is only one correct PIN, so the expected behaviour is that I should be getting a consistent output, which is the expected PIN. A key observation here is that across different executions of this program, the same pins have varying run times. A process does not exist in a vacuum, meaning many environmental factors can impact runtime (Ex: your machine may be running other processes that can slightly affect latency), so it is not consistent to run a single check and move on. To work around this slight noise, I incorporated some frequency analysis, in which the script tries each PIN 5 times (or any amount of times defined by the user), and then uses the median runtime for comparison. Ideally this should cause some convergence and cause any outliers to be ignored. The new and improved script was as follows:
@@ -160,11 +160,11 @@ for i in range(PIN_LEN):
         print(f"pos={i} guess={guess} median={med:.3f}s samples={[round(x,3) for x in samples]}")
 
         if is_success(out):
-            print(f"[+] recovered pin: {guess}")
+            print(f"recovered pin: {guess}")
             raise SystemExit
 
         if is_wrong_length(out):
-            print(f"[!] wrong length for guess {guess!r}")
+            print(f"wrong length for guess {guess!r}")
             raise SystemExit(1)
 
         if med > best_med:
@@ -172,16 +172,16 @@ for i in range(PIN_LEN):
             best_digit = d
 
     known += best_digit
-    print(f"[+] chose {best_digit}, current prefix = {known}, median = {best_med:.3f}s")
+    print(f"chose {best_digit}, current prefix = {known}, median = {best_med:.3f}s")
 
 final_med, final_out, final_samples = timed_guess(known)
-print(f"[+] final candidate: {known}")
+print(f"final candidate: {known}")
 print(final_out)
 
 if is_success(final_out):
-    print(f"[+] recovered pin: {known}")
+    print(f"recovered pin: {known}")
 else:
-    print("[!] final candidate was not accepted")
+    print("final candidate was not accepted")
 ```
 
 Running the new and improved script I got the working PIN: 48390513
