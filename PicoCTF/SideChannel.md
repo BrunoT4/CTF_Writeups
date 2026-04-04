@@ -195,6 +195,5 @@ Running the new and improved script I got the working PIN: 48390513
 All that there was left to do at this point was just take that PIN, connect to the remote host, and paste it in.
 And just like that, we have our flag!!!
 
----
 
 **Flag:** `picoCTF{t1m1ng_4tt4ck_914c5ec3}`
