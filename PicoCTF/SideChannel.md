@@ -11,6 +11,11 @@ This is a problem from picoCTF 2022. It was a problem I solved back in high scho
 
 ---
 
+## Description
+
+`There's something fishy about this PIN-code checker, can you figure out the PIN and get the flag? Download the PIN checker program here pin_checker
+Additional details will be available after launching your challenge instance.`
+
 ## Challenge Overview
 
 The challenge gives you a host address and port to connect to, that upon connection asks for a PIN. Depending on whether the entered PIN is correct, the service returns either 'Access denied' or the flag. The problem also provides the ELF file for the pin_checker program, which you can download and analyze on your local machine (The correct PIN is the same for both the provided ELF and the version running on saturn.picoctf.net)
