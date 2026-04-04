@@ -2,13 +2,12 @@
 
 **Category:** Web Exploitation, **Difficulty:** Hard
 
----
-
 ## Description
 
 `Can you try to get the flag from our website. I've prepared my queries everywhere! I think!
 Additional details will be available after launching your challenge instance.`
 
+---
 
 ## Challenge Overview
 
