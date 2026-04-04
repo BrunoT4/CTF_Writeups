@@ -24,7 +24,6 @@ So I made an account and started messing around with the actual app. I observed 
 
 What did catch my eye was the generated CSV filename. It was named dynamically after the logged-in user, in my case something like report_wasd_{random # string}.csv (not a very creative name, but it got the job done). That told me the username was flowing into backend processing somewhere downstream, and that's a different story from the insert. If the report query is pulling expenses by matching on the username string rather than a user ID, and that username isn't sanitized at query time, then the username I was using to register the account could very well be an attack surface. All of a sudden the problem title made a lot more sense. This must be a second order injection.
 
----
 
 ## Getting Past the Validator
 
@@ -32,7 +31,6 @@ There's a uniqueness check on signup that blocks exact duplicate usernames. From
 
 I registered with `' OR '1'='1` as my username, generated a report, and the CSV came back with my previous account's expense data in it. Now that I had confirmed the presence of a second order injection, my next step was to figure out as much as I could of the tables structure and contents.
 
----
 
 ## Figuring Out the Column Count
 
@@ -53,7 +51,6 @@ I also tried stacking queries with a semicolon, and got back:
 
 It seems this table exclusively contains expense data, so the next place to check is whether this database contains any other tables.
 
----
 
 ## Dumping the Schema
 
