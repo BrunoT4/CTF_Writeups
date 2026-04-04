@@ -39,6 +39,8 @@ This is very interesting because the soundbyte is incredibly uniform. In fact, e
 [4, 5, 4, 3, 4, 17, 9, 7, 9, 5, 9, ... 12]
 ```
 
+## Figuring Out the Encoding
+
 While observing this list, an running an additional sort, I noticed something very interesting. The range of the numbers is 16, so this very well may be a base16 encoding with some additional padding. I decided to run an addition transformation by lowering the each value by the lowest value (2), which allows us to get a familiar range of 0-15. I also translated each value to its corresponding hex digit and join the list. This gives a nice clean hex string.
 
 ```bash
@@ -105,3 +107,7 @@ def sound_generation(name, rand_hex):
 ```
 
 A python  script!!! Looks like this was the script used to generate the wav using itself, and at the bottom we have our flag.
+
+---
+
+**Flag:** `picoCTF{mU21C_1s_1337_5db6b85e}`
