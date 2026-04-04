@@ -91,6 +91,4 @@ I registered with:
 
 Upon registration I generated the report (no need to add expenses as the injection is already complete). The CSV came back with all the key-value pairs from that table dumped into the description column. Sure enough, one of the cells in that table contained the flag.
 
----
-
 **Flag:** `picoCTF{s3c0nd_0rd3r_1t_1s_5c47e96a}`
