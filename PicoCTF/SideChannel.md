@@ -3,6 +3,10 @@
 
 **Category:** Digital Forensics, **Difficulty:** Hard
 
+## Description
+
+`There's something fishy about this PIN-code checker, can you figure out the PIN and get the flag? Download the PIN checker program here` [pin_checker](https://artifacts.picoctf.net/c/74/pin_checker)`. Additional details will be available after launching your challenge instance.`
+
 ---
 
 ## Author Notes
@@ -10,10 +14,6 @@
 This is a problem from picoCTF 2022. It was a problem I solved back in high school, but I wanted to revisit it since it was my first introduction to Side Channels. I also used a very monkey patch-esque methodology for solving the problem, so I figured I'd redo it with some automated scripting. I also re-did this on a laptop with an M1 chip, and I didn't expect Docker to be such a hassle to work with for this :( (ELF File expects different architecture).
 
 ---
-
-## Description
-
-`There's something fishy about this PIN-code checker, can you figure out the PIN and get the flag? Download the PIN checker program here` [pin_checker](https://artifacts.picoctf.net/c/74/pin_checker)`. Additional details will be available after launching your challenge instance.`
 
 ## Challenge Overview
 
