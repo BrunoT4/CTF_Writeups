@@ -35,4 +35,6 @@ This is very interesting because the soundbyte is incredibly uniform. In fact, e
 ```bash
 >>> m_data = [x // 500 for x in data]
 >>> m_data = m_data.astype(str)
+>>> print(list(map(int, m_data)))
+[4, 5, 4, 3, 4, 17, 9, 7, 9, 5, 9, ... 12]
 ```
