@@ -13,8 +13,9 @@ This is a problem from picoCTF 2022. It was a problem I solved back in high scho
 
 ## Description
 
-`There's something fishy about this PIN-code checker, can you figure out the PIN and get the flag? Download the PIN checker program here `[pin_checker](https://artifacts.picoctf.net/c/74/pin_checker)`
-Additional details will be available after launching your challenge instance.`
+`There's something fishy about this PIN-code checker, can you figure out the PIN and get the flag?`
+`Download the PIN checker program here` [pin_checker](https://artifacts.picoctf.net/c/74/pin_checker)
+`Additional details will be available after launching your challenge instance.`
 
 ## Challenge Overview
 
