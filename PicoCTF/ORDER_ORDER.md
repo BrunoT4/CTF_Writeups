@@ -8,7 +8,6 @@
 
 `Can you try to get the flag from our website. I've prepared my queries everywhere! I think! You can get started here to find the flag!`
 
----
 
 ## Challenge Overview
 
