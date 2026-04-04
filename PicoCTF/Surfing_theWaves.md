@@ -41,7 +41,7 @@ This is very interesting because the soundbyte is incredibly uniform. In fact, e
 
 ## Figuring Out the Encoding
 
-While observing the previous list, and running an additional sort, I noticed something very interesting. The range of the numbers is 16, so this very well may be a base16 encoding with some additional padding. I decided to run an addition transformation by lowering the each value by the lowest value (2), which allows us to get a familiar range of 0-15. I also translated each value to its corresponding hex digit and join the list. This gives a nice clean hex string.
+While observing the previous list, and running an additional sort, I noticed something very interesting. The range of the numbers is 16, so this very well may be a base16 encoding with some additional padding. I decided to run an additional transformation by lowering the each value by the lowest value (2), which allows us to get a familiar range of 0-15. I also translated each value to its corresponding hex digit and joined the list. This gives a nice clean hex string.
 
 ```bash
 >>> m_data = [(x // 500) - 2 for x in data]
