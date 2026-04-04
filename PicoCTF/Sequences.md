@@ -87,7 +87,6 @@ $$
 
 This makes it clear that it is just a linear recurrence of order 4.
 
----
 
 ## Step 2: Key observation about the modulus
 
@@ -119,7 +118,6 @@ $$
 a_{20000000} \bmod 10^{10000}.
 $$
 
----
 
 ## Step 3: Convert the recurrence into a matrix
 
@@ -175,7 +173,6 @@ The answer I want is the first entry of that vector.
 
 This is much better because I can compute $A^{n-3}$ using fast exponentiation, which only takes $O(\log n)$ multiplications.
 
----
 
 ## Step 4: Adding the Optimization to the Program
 
@@ -274,8 +271,6 @@ if __name__ == "__main__":
     sol = m_func(ITERS)
     decrypt_flag(sol)
 ```
-
----
 
 
 This optimized version uses:
